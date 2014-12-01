@@ -222,7 +222,7 @@ MPIEXEC_POSTFLAGS:STRING=
 // run by MPIEXEC.
 MPIEXEC_PREFLAGS:STRING=
 
-//Path to a program.
+//Cleared
 MPI_CXX_COMPILER:FILEPATH=/usr/local/bin/mpicxx
 
 //MPI CXX compilation flags
@@ -237,7 +237,7 @@ MPI_CXX_LIBRARIES:STRING=/usr/local/Cellar/open-mpi/1.8.1/lib/libmpi_cxx.dylib;/
 //MPI CXX linking flags
 MPI_CXX_LINK_FLAGS:STRING=
 
-//Path to a program.
+//Cleared
 MPI_C_COMPILER:FILEPATH=/usr/local/bin/mpicc
 
 //MPI C compilation flags
@@ -305,6 +305,9 @@ WILDLIFE_VISION_BINARY_DIR:STATIC=/Users/deselt/Dropbox/code/wildlife_vision/bui
 
 //Value Computed by CMake
 WILDLIFE_VISION_SOURCE_DIR:STATIC=/Users/deselt/Dropbox/code/wildlife_vision
+
+//Path to a program.
+file_cmd:FILEPATH=/usr/bin/file
 
 
 ########################
@@ -413,7 +416,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=5
+CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=4
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -512,4 +515,6 @@ _Boost_INCLUDE_DIR_LAST:INTERNAL=/usr/local/include
 _Boost_LIBRARY_DIR_LAST:INTERNAL=/usr/local/lib
 //Last used Boost_USE_MULTITHREADED value.
 _Boost_USE_MULTITHREADED_LAST:INTERNAL=TRUE
+//ADVANCED property for variable: file_cmd
+file_cmd-ADVANCED:INTERNAL=1
 

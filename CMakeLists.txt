@@ -100,5 +100,5 @@ message(STATUS "opencv libraries: ${OpenCV_LIBRARIES}")
 
 add_subdirectory(conv_net)
 add_subdirectory(image_tools)
-add_subdirectory(feature_detection)
+#add_subdirectory(feature_detection)
 add_subdirectory(other)

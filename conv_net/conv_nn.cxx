@@ -133,7 +133,9 @@ int main(int argc, char** argv) {
     int fc_size;
     get_argument(arguments, "--fully_connected_size", true, fc_size);
 
-    conv_nn = new ConvolutionalNeuralNetwork(rowscols, rowscols, true, images, layers, fc_size);
+    bool quiet =false;
+    if (rank != 0) quiet = true;
+    conv_nn = new ConvolutionalNeuralNetwork(rowscols, rowscols, true, quiet, images, layers, fc_size);
 
     vector<double> min_bound(conv_nn->get_n_edges(), -1.0);
     vector<double> max_bound(conv_nn->get_n_edges(),  1.0);
