@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
@@ -33,7 +34,7 @@ ConvolutionalNeuralNetwork *conv_nn;
 
 void read_image_set(ifstream &infile, vector< vector< vector<char> > > &images, int size, int count, int classification) {
     for (int i = 0; i < count; i++) {
-        //cout << "reading image " << i << ", " << size << " bytes." << endl;
+//        cout << "reading image " << i << ", " << size << " bytes." << endl;
         char* pixels = new char[size];
 
         infile.read( pixels, sizeof(char) * size);
@@ -55,25 +56,30 @@ void read_images(string binary_filename, int &image_size, int &rowscols, vector<
 
     ifstream infile(binary_filename.c_str(), ios::in | ios::binary);
 
-    images = vector< vector< vector<char> > >(2);
-
     if (infile.is_open()) {
-        int initial_vals[4];
+        int initial_vals[3];
         infile.read( (char*)&initial_vals, sizeof(initial_vals) );
 
-        rowscols = initial_vals[0];
-        int vals_per_pixel = initial_vals[1];
-        int n_positive_images = initial_vals[2];
-        int n_negative_images = initial_vals[3];
+        int n_classes = initial_vals[0];
+        rowscols = initial_vals[1];
+        int vals_per_pixel = initial_vals[2];
 
-        //cout << "image size: " << rowscols << "x" << rowscols << "x" << vals_per_pixel << endl;
-        //cout << "positive samples: " << n_positive_images << endl;
-        //cout << "negative samples: " << n_negative_images << endl;
+        images = vector< vector< vector<char> > >(n_classes);
+
+        //cout << "n_classes: " << n_classes << endl;
+        //cout << "rowscols: " << rowscols << endl;
+        //cout << "vals_per_pixel: " << vals_per_pixel << endl;
+
+        vector<int> class_sizes(n_classes, 0);
+        infile.read( (char*)&class_sizes[0], sizeof(int) * n_classes );
+
 
         image_size = rowscols * rowscols * vals_per_pixel;
 
-        read_image_set(infile, images, image_size, n_positive_images, 0);
-        read_image_set(infile, images, image_size, n_negative_images, 1);
+        for (int i = 0; i < n_classes; i++) {
+            //cout << "reading image set with " << class_sizes[i] << " files." << endl;
+            read_image_set(infile, images, image_size, class_sizes[i], i);
+        }
 
         infile.close();
     } else {
@@ -137,8 +143,8 @@ int main(int argc, char** argv) {
     if (rank != 0) quiet = true;
     conv_nn = new ConvolutionalNeuralNetwork(rowscols, rowscols, true, quiet, images, layers, fc_size);
 
-    vector<double> min_bound(conv_nn->get_n_edges(), -1.0);
-    vector<double> max_bound(conv_nn->get_n_edges(),  1.0);
+    vector<double> min_bound(conv_nn->get_n_edges(), -2.0);
+    vector<double> max_bound(conv_nn->get_n_edges(),  2.0);
 
     if (rank == 0) cout << "number of parameters: " << conv_nn->get_n_edges() << endl;
 

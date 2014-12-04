@@ -18,24 +18,29 @@ using namespace cv;
 int main(int argc, char** argv) {
     Mat image;
 
-    if (argc != 4) {
+    if (argc != 5) {
         cerr << "error: incorrect arguments." << endl;
         cerr << "usage: " << endl;
-        cerr << "    ./" << argv[0] << " <input directory> <output directory> <img size>" << endl;
+        cerr << "    ./" << argv[0] << " <input directory> <output directory> <img size> <rotate?>" << endl;
         exit(1);
     }
 
     string input_directory = argv[1];
     string output_directory = argv[2];
     int img_size = atoi(argv[3]);
+    int rotate = atoi(argv[4]);
 
     cout << "creating directory (if it does not exist): '" << output_directory.c_str() << "'" << endl;
     create_directories(output_directory);
 
+    int count = 0;
     directory_iterator end_itr;
     for (directory_iterator itr(input_directory); itr != end_itr; itr++) {
         if (!is_directory(itr->status())) {
-            if (itr->path().leaf().c_str()[0] == '.') continue;
+            if (itr->path().leaf().c_str()[0] == '.') {
+                cout << "skipping: " << itr->path().c_str() << endl;
+                continue;
+            }
 
             cout << "resizing file: '" << itr->path().c_str() << endl;
 
@@ -50,9 +55,36 @@ int main(int argc, char** argv) {
             resize(src, dst, size);
 
             imwrite(output_filename.str().c_str(), dst);
+
+            if (rotate == 1) {
+                int file_pos = output_filename.str().rfind('.');
+                string filebase = output_filename.str().substr(0, file_pos);
+                string filetype = output_filename.str().substr(file_pos, output_filename.str().size() - file_pos);
+
+                //cout << "base: '" << filebase << "'" << endl;
+                //cout << "type: '" << filetype << "'" << endl;
+
+                Mat rot(dst);
+                for (int i = 1; i < 4; i++) {
+                    transpose(rot, rot);
+                    flip(rot, rot, 1);
+
+                    ostringstream of;
+                    of << filebase << "_" << i << filetype;
+
+                    cout << "writing to:    '" << of.str() << "'" << endl;
+                    imwrite( of.str().c_str(), rot );
+                }
+
+            }
+
+            count++;
+        } else {
+            cout << "skipping directory: " << itr->path().c_str() << endl;
         }
     }
 
+    cout << "resized " << count << " files." << endl;
     return 0;
 }
 
