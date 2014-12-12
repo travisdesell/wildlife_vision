@@ -18,10 +18,10 @@ using namespace cv;
 int main(int argc, char** argv) {
     Mat image;
 
-    if (argc != 5) {
+    if (argc != 6) {
         cerr << "error: incorrect arguments." << endl;
         cerr << "usage: " << endl;
-        cerr << "    ./" << argv[0] << " <input directory> <output directory> <img size> <rotate?>" << endl;
+        cerr << "    ./" << argv[0] << " <input directory> <output directory> <img size> <rotate?> <convert to HSV?>" << endl;
         exit(1);
     }
 
@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
     string output_directory = argv[2];
     int img_size = atoi(argv[3]);
     int rotate = atoi(argv[4]);
+    int hsv = atoi(argv[5]);
 
     cout << "creating directory (if it does not exist): '" << output_directory.c_str() << "'" << endl;
     create_directories(output_directory);
@@ -52,7 +53,15 @@ int main(int argc, char** argv) {
             Size size(img_size, img_size);
             Mat src = imread( itr->path().c_str() );
             Mat dst;
-            resize(src, dst, size);
+            if (img_size != 0) {
+                resize(src, dst, size);
+            } else {
+                dst = src;
+            }
+
+            if (hsv) {
+                cvtColor(dst, dst, CV_BGR2HSV);
+            }
 
             imwrite(output_filename.str().c_str(), dst);
 

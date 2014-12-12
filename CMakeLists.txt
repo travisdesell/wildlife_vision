@@ -83,6 +83,7 @@ find_package(Boost COMPONENTS system filesystem)
 find_package(OpenCV COMPONENTS features2d nonfree flann imgproc highgui core)
 #find_package(MySQL)
 find_package(MPI)
+find_package(OpenCL)
 
 #message(STATUS " mysql include dir: ${MYSQL_INCLUDE_DIR}")
 
@@ -97,6 +98,7 @@ include_directories(${OpenCV_INCLUDE_DIR}/../)
 message(STATUS "opencv include dir: ${OpenCV_INCLUDE_DIR}")
 message(STATUS "opencv libraries: ${OpenCV_LIBRARIES}")
 
+add_definitions( -D__OPENCL__ )
 
 add_subdirectory(conv_net)
 add_subdirectory(image_tools)

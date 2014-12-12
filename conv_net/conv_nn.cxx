@@ -5,6 +5,8 @@
 #include <fstream>
 #include <vector>
 
+#include "time.h"
+
 #include "mpi.h"
 
 //from TAO
@@ -89,7 +91,18 @@ void read_images(string binary_filename, int &image_size, int &rowscols, vector<
 
 
 double objective_function(const vector<double> &parameters) {
-    return conv_nn->objective_function(parameters);
+//    clock_t cpu_start_time = clock();
+//    double cpu_result = conv_nn->objective_function(parameters);
+//    clock_t cpu_end_time = clock();
+
+//    clock_t gpu_start_time = clock();
+    double gpu_result = conv_nn->objective_function_opencl(parameters);
+//    clock_t gpu_end_time = clock();
+
+//    cout << "cpu_result: " << cpu_result << " took " << (float)(cpu_end_time - cpu_start_time)/CLOCKS_PER_SEC << "s" << endl;
+//    cout << "gpu_result: " << gpu_result << " took " << (float)(gpu_end_time - gpu_start_time)/CLOCKS_PER_SEC << "s" << endl;
+
+    return gpu_result;
 }
 
 void print_statistics(const vector<double> &parameters) {
@@ -142,9 +155,10 @@ int main(int argc, char** argv) {
     bool quiet =false;
     if (rank != 0) quiet = true;
     conv_nn = new ConvolutionalNeuralNetwork(rowscols, rowscols, true, quiet, images, layers, fc_size);
+    conv_nn->initialize_opencl();
 
-    vector<double> min_bound(conv_nn->get_n_edges(), -2.0);
-    vector<double> max_bound(conv_nn->get_n_edges(),  2.0);
+    vector<double> min_bound(conv_nn->get_n_edges(), -10.0);
+    vector<double> max_bound(conv_nn->get_n_edges(),  10.0);
 
     if (rank == 0) cout << "number of parameters: " << conv_nn->get_n_edges() << endl;
 

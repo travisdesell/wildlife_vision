@@ -258,6 +258,12 @@ MPI_EXTRA_LIBRARY:STRING=/usr/local/Cellar/open-mpi/1.8.1/lib/libmpi.dylib
 //MPI library to link against
 MPI_LIBRARY:FILEPATH=/usr/local/Cellar/open-mpi/1.8.1/lib/libmpi_cxx.dylib
 
+//Include for OpenCL on OSX
+OPENCL_INCLUDE_DIRS:PATH=/System/Library/Frameworks/OpenCL.framework
+
+//OpenCL lib for OSX
+OPENCL_LIBRARIES:FILEPATH=/System/Library/Frameworks/OpenCL.framework
+
 //Path to a library.
 OpenCV_CORE_LIBRARY:FILEPATH=/usr/local/lib/libopencv_core.dylib
 
@@ -305,6 +311,9 @@ WILDLIFE_VISION_BINARY_DIR:STATIC=/Users/deselt/Dropbox/code/wildlife_vision/bui
 
 //Value Computed by CMake
 WILDLIFE_VISION_SOURCE_DIR:STATIC=/Users/deselt/Dropbox/code/wildlife_vision
+
+//Include for OpenCL CPP bindings on OSX
+_OPENCL_CPP_INCLUDE_DIRS:PATH=_OPENCL_CPP_INCLUDE_DIRS-NOTFOUND
 
 //Path to a program.
 file_cmd:FILEPATH=/usr/bin/file
@@ -461,6 +470,8 @@ CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 FIND_PACKAGE_MESSAGE_DETAILS_MPI_C:INTERNAL=[/usr/local/Cellar/open-mpi/1.8.1/lib/libmpi.dylib][/usr/local/Cellar/open-mpi/1.8.1/include][v()]
 //Details about finding MPI_CXX
 FIND_PACKAGE_MESSAGE_DETAILS_MPI_CXX:INTERNAL=[/usr/local/Cellar/open-mpi/1.8.1/lib/libmpi_cxx.dylib;/usr/local/Cellar/open-mpi/1.8.1/lib/libmpi.dylib][/usr/local/Cellar/open-mpi/1.8.1/include][v()]
+//Details about finding OpenCL
+FIND_PACKAGE_MESSAGE_DETAILS_OpenCL:INTERNAL=[/System/Library/Frameworks/OpenCL.framework][/System/Library/Frameworks/OpenCL.framework][v()]
 //ADVANCED property for variable: MPIEXEC
 MPIEXEC-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: MPIEXEC_MAX_NUMPROCS
@@ -495,6 +506,8 @@ MPI_C_LINK_FLAGS-ADVANCED:INTERNAL=1
 MPI_HEADER_PATH:INTERNAL=MPI_HEADER_PATH-NOTFOUND
 //Scratch variable for MPI lib detection
 MPI_LIB:INTERNAL=MPI_LIB-NOTFOUND
+//ADVANCED property for variable: OPENCL_INCLUDE_DIRS
+OPENCL_INCLUDE_DIRS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: OpenCV_CORE_LIBRARY
 OpenCV_CORE_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: OpenCV_HIGH_GUI_LIBRARY
