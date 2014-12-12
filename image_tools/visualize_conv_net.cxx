@@ -90,7 +90,6 @@ int main(int argc, char** argv) {
     bool quiet = false;
     ConvolutionalNeuralNetwork *conv_nn = new ConvolutionalNeuralNetwork(rowscols, rowscols, true, quiet, images, layers, fc_size);
 
-    conv_nn->initialize_opencl();
 
     conv_nn->set_weights(weights);
 
@@ -115,6 +114,9 @@ int main(int argc, char** argv) {
         }
     }
 
+    /*
+    conv_nn->initialize_opencl();
+
     vector<float> output = conv_nn->apply_to_image_opencl(image, resized_image.rows, resized_image.cols, 0);
     int current = 0;
     for (int i = 0; i < resized_image.rows - rowscols; i++) {
@@ -124,7 +126,9 @@ int main(int argc, char** argv) {
         }
     }
 
-    /*
+    conv_nn->deinitialize_opencl();
+    */
+
     for (int i = 0; i < resized_image.rows - rowscols; i++) {
         for (int j = 0; j < resized_image.cols - rowscols; j++) {
             vector<char> current_image;
@@ -140,6 +144,8 @@ int main(int argc, char** argv) {
 
             conv_nn->evaluate(current_image, 0);
 
+            //cout << "at " << i << ", " << j << ": " << conv_nn->get_output_class(0) << ", " << conv_nn->get_output_class(1) << ", " << conv_nn->get_output_class(2) << endl;
+
             if (n_classes == 2) {
                 short b = (short)(conv_nn->get_output_class(0) * 255.0);
                 classified_image.at<uchar>(i, j) = b;
@@ -153,8 +159,6 @@ int main(int argc, char** argv) {
 
         cout << i << " / " << (resized_image.rows - rowscols) << endl;
     }
-    */
-    conv_nn->deinitialize_opencl();
 
     imshow("classified image", classified_image);
     imwrite(output_file.c_str(), classified_image);
