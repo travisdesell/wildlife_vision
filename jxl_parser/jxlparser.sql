@@ -1,8 +1,6 @@
-USE `uas`;
-
 CREATE TABLE IF NOT EXISTS `tblFlights` (
 	`flightId` int(11) NOT NULL AUTO_INCREMENT,
-	`timestamp` NOT NULL DATETIME,
+	`timestamp` DATETIME NOT NULL,
 	`name` varchar(16) NOT NULL,
 	`latitude` float(7, 4) NOT NULL,
 	`longitude` float(7, 4) NOT NULL,
