@@ -224,7 +224,6 @@ def save_images_to_db(images, flight, host, database, username, password):
 			"VALUES (%s, %s, %f, %f, %f, %f)"
 		)
 
-		flight = images.itervalues().next().flight
 		flightData = (
 			flight.timestamp, flight.name,
 			flight.latitudeN, flight.latitudeS,
@@ -289,5 +288,11 @@ if __name__ == '__main__':
 	args = argparser.parse_args()
 
 	images = parse(args.filename)
-	print images
-	print images.itervalues().next().flight
+	save_images_to_db(
+		images=images,
+		flight=images.itervalues().next().flight,
+		host=args.host,
+		database=args.database,
+		username=args.username,
+		password=args.password
+	)
