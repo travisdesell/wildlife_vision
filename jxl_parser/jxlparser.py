@@ -6,6 +6,7 @@ in a given database.
 """
 
 import xml.etree.ElementTree as XMLParser
+import os
 
 class JXLFlight:
 	"""JXLFlight stores all metadata information about a particular flight in
@@ -173,7 +174,6 @@ def parse(filename):
 	flight.name = FlightMissionRecord.find('Name').text
 
 	# pull the directory from the JXL file location information
-	import os
 	flight.directory = os.path.dirname(os.path.abspath(filename))
 
 	# apply the flight mission name to all images
@@ -182,6 +182,35 @@ def parse(filename):
 
 	# return our images
 	return images
+
+def output_to_csv(images, filename=None):
+	"""Outputs the images to a CSV file for opening in Excel or similar."""
+
+	line = 'Name,Time,Latitude,Longitude,Height,Yaw,Pitch,Roll'
+	print line
+
+	fp = None
+	if filename:
+		fp = open(filename, 'w')
+		fp.write(line + '\n')
+
+	for key in sorted(images):
+		image = images[key]
+		line = '{},{},{},{},{},{},{},{}'.format(
+			image.filename,
+			image.timestamp,
+			image.latitude, image.longitude,
+			image.height,
+			image.yaw, image.pitch, image.roll
+		)
+
+		print line
+
+		if fp:
+			fp.write(line + '\n')
+
+	if fp:
+		fp.close()
 
 def save_images_to_db(images, flight, host, database, username, password):
 	"""Saves an array of images from a flight to the database using the
@@ -279,21 +308,28 @@ if __name__ == '__main__':
 	)
 	argparser.add_argument('filename', type=str, help='JXL file to parse')
 	argparser.add_argument('--host', type=str, help='Database host address', default='localhost')
-	argparser.add_argument('database', type=str, help='Database')
-	argparser.add_argument('username', type=str, 
-		help='Username for database connection'
+	argparser.add_argument('--database', type=str, help='Database', default='')
+	argparser.add_argument('--username', type=str, 
+		help='Username for database connection', default=''
 	)
 	argparser.add_argument('--password', type=str,
 		help='Password for database connection', default=''
 	)
+	argparser.add_argument('--csv', type=str, help='CSV file output', default='')
 	args = argparser.parse_args()
 
 	images = parse(args.filename)
-	save_images_to_db(
-		images=images,
-		flight=images.itervalues().next().flight,
-		host=args.host,
-		database=args.database,
-		username=args.username,
-		password=args.password
-	)
+
+	# see if we need to output to csv
+	if args.csv:
+		output_to_csv(images=images, filename=os.path.abspath(args.csv))
+
+	if args.database and args.username and args.password:
+		save_images_to_db(
+			images=images,
+			flight=images.itervalues().next().flight,
+			host=args.host,
+			database=args.database,
+			username=args.username,
+			password=args.password
+		)
