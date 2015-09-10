@@ -1,0 +1,271 @@
+Parsing file: LD_BP_and_PR_Zoomed_Out_12June2015_Flt1a.jxl
+
+JOBFile { product , TimeStamp , jobName , version , productVersion , {http://www.w3.org/2001/XMLSchema-instance}schemaLocation } 
+ FieldBook 
+   PhotoInstrumentRecord { TimeStamp , ID } 
+     Type 
+       [ Aerial ]
+     Model 
+       [ Trimble UX5 ]
+     Serial 
+       [ 0000-0000 ]
+     FirmwareVersion 
+       [ v0.00 ]
+     UserDefinedName 
+       [ Prototype ]
+   CameraDesignRecord { TimeStamp , ID } 
+     Type 
+       [ Sony NEX-5 ]
+     HeightPixels 
+       [ 3264 ]
+     WidthPixels 
+       [ 4912 ]
+     PixelSize 
+       [ 4.74999999999941E-06 ]
+     LensModel 
+       [ Rectilinear ]
+     NominalFocalLength 
+       [ 0.015517161 ]
+   CameraRecord2 { TimeStamp , ID } 
+     CameraDesignID 
+       [ 00000002 ]
+     CameraPosition 
+       [ 01 ]
+     Optics 
+       IdealAngularMagnification 
+         [ 1.0 ]
+       AngleSymmetricDistortion 
+         Order3 
+           [ 0.0499851943332909 ]
+         Order5 
+           [ 0.0471725425089201 ]
+         Order7 
+           [ 0.00330164380262107 ]
+         Order9 
+           [ 0 ]
+       AngleDecenteringDistortion 
+         Column 
+           [ 0.000698709633197124 ]
+         Row 
+           [ 0.000393933183710839 ]
+     Geometry 
+       PerspectiveCenterPixels 
+         PrincipalPointColumn 
+           [ -2451.43984904757 ]
+         PrincipalPointRow 
+           [ -1622.8232927352 ]
+         PrincipalDistance 
+           [ -3266.77073684251 ]
+       VectorOffset 
+         X 
+           [ 0 ]
+         Y 
+           [ 0 ]
+         Z 
+           [ 0 ]
+       BiVectorAngle 
+         XX 
+           [ 0 ]
+         YY 
+           [ 0 ]
+         ZZ 
+           [ -1.5707963267948966 ]
+   PointRecord { TimeStamp , ID } 
+     Name 
+       [ DSC02364 ]
+     Code 
+     Method 
+       [ Coordinates ]
+     SurveyMethod 
+       [ Autonomous ]
+     Classification 
+       [ Normal ]
+     Deleted 
+       [ false ]
+     WGS84 
+       Latitude 
+         [ 58.69320823 ]
+       Longitude 
+         [ -93.40022301 ]
+       Height 
+         [ 25.08 ]
+   PhotoStationRecord { TimeStamp , ID } 
+     StationName 
+       [ DSC02364 ]
+     InstrumentHeight 
+       [ 0 ]
+     RawInstrumentHeight 
+       MeasurementMethod 
+         [ TrueHeight ]
+       MeasuredHeight 
+         [ 0 ]
+       HorizontalOffset 
+         [ 0 ]
+       VerticalOffset 
+         [ 0 ]
+     InstrumentID 
+       [ 00000001 ]
+     AtmosphereID 
+     StationType 
+       [ RawSensorValues ]
+     DeviceAxisOrientationData 
+       DeviceAxisOrientation 
+         BiVector 
+           XX 
+             [ -0.898435 ]
+           YY 
+             [ -0.343696 ]
+           ZZ 
+             [ -5.64842 ]
+       MeasurementMethod 
+         [ TrueHeight ]
+       MeasuredHeight 
+         [ 0 ]
+       HorizontalOffset 
+         [ 0 ]
+       VerticalOffset 
+         [ 0 ]
+         BiVector 
+           XX 
+             [ -1.43087 ]
+           YY 
+             [ -0.0872384 ]
+           ZZ 
+             [ -5.53164 ]
+   ImageRecord { TimeStamp , ID } 
+     StationID 
+       [ 00000003 ]
+     BackBearingID 
+     CameraID 
+       [ 00002880 ]
+     PointRecordID 
+     FileName 
+       [ DSC02364.JPG ]
+     HorizontalAngle 
+     VerticalAngle 
+     Width 
+       [ 4912 ]
+     Height 
+       [ 3264 ]
+     SourceX 
+       [ 0 ]
+     SourceY 
+       [ 0 ]
+     SourceWidth 
+       [ 4912 ]
+     SourceHeight 
+       [ 3264 ]
+   AtmosphereRecord { TimeStamp , ID } 
+     Pressure 
+     Temperature 
+     PPM 
+     ApplyEarthCurvatureCorrection 
+       [ false ]
+     ApplyRefractionCorrection 
+       [ false ]
+     RefractionCoefficient 
+       [ 0 ]
+     PressureInputMethod 
+       [ ReadFromInstrument ]
+   FlightMissionRecord { TimeStamp , ID } 
+     Name 
+       [ LD_BP_and_PR_Zoomed_Out PR North 6 Block ]
+     FlightBlock { endTime , name , startTime } 
+       FlightPlan { percentLateralOverlap , percentForwardOverlap , height } 
+         Node { latitude , longitude } 
+       StationList 
+         StationID 
+           [ 00000003 ]
+ Reductions 
+ Environment 
+   DisplaySettings 
+     DistanceUnits 
+       [ Metres ]
+     HeightUnits 
+       [ Metres ]
+     AngleUnits 
+       [ DecimalDegrees ]
+     AzimuthFormat 
+       [ Azimuth ]
+     LatitudeLongitudeUnits 
+       [ DecimalDegrees ]
+     CoordinateOrder 
+       [ North-East-Elevation ]
+     TemperatureUnits 
+       [ Celsius ]
+     PressureUnits 
+       [ MiliBar ]
+     GradeUnits 
+       [ Percentage ]
+     AreaUnits 
+       [ SquareMetres ]
+     StationFormat 
+       [ 1+000.0 ]
+   JobSettings 
+     NeighbourhoodAdjustment 
+       Applied 
+         [ false ]
+       WeightExponent 
+         [ 0 ]
+   TimeZone 
+     ZoneName 
+     HoursToUTC 
+       [ -5 ]
+   CoordinateSystem 
+     SystemName 
+       [ Default ]
+     ZoneName 
+       [ Default ]
+     DatumName 
+       [ WGS 1984 ]
+     Ellipsoid 
+       EarthRadius 
+         [ 6378137 ]
+       Flattening 
+         [ 0.00335281067183 ]
+     Projection 
+       Type 
+         [ NoProjection ]
+       Scale 
+         [ 1 ]
+       GridOrientation 
+         [ IncreasingNorthEast ]
+       SouthAzimuth 
+         [ false ]
+       ApplySeaLevelCorrection 
+         [ false ]
+     LocalSite 
+       Type 
+         [ Grid ]
+       ProjectLocationLatitude 
+       ProjectLocationLongitude 
+       ProjectLocationHeight 
+     Datum 
+       Type 
+         [ ThreeParameter ]
+       GridName 
+         [ WGS 1984 ]
+       Direction 
+         [ WGS84ToLocal ]
+       EarthRadius 
+         [ 6378137 ]
+       Flattening 
+         [ 0.00335281067183 ]
+       TranslationX 
+         [ 0 ]
+       TranslationY 
+         [ 0 ]
+       TranslationZ 
+         [ 0 ]
+     HorizontalAdjustment 
+       Type 
+         [ NoAdjustment ]
+     VerticalAdjustment 
+       Type 
+         [ NoAdjustment ]
+     CombinedScaleFactor 
+       Location 
+         Latitude 
+         Longitude 
+         Height 
+       Scale 
