@@ -276,7 +276,7 @@ if __name__ == '__main__':
 		description='Parse a JXL file for storage in a database.'
 	)
 	argparser.add_argument('filename', type=str, help='JXL file to parse')
-	argparser.add_argument('--host', type=str, help='Database host address', default='')
+	argparser.add_argument('--host', type=str, help='Database host address', default='localhost')
 	argparser.add_argument('database', type=str, help='Database')
 	argparser.add_argument('username', type=str, 
 		help='Username for database connection'
