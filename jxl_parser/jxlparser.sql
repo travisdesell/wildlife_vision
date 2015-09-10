@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `tblFlights` (
 CREATE TABLE IF NOT EXISTS `tblImages` (
 	`imageId` int(11) NOT NULL AUTO_INCREMENT,
 	`flightId` int(11) NOT NULL,
-	`timestamp` NOT NULL DATETIME,
+	`timestamp` DATETIME NOT NULL,
 	`name` varchar(16) NOT NULL,
 	`latitude` float(7, 4) NOT NULL,
 	`longitude` float(7, 4) NOT NULL,
