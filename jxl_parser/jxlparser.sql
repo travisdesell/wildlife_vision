@@ -2,11 +2,11 @@ CREATE TABLE IF NOT EXISTS `tblFlights` (
 	`flightId` int(11) NOT NULL AUTO_INCREMENT,
 	`timestamp` DATETIME NOT NULL,
 	`name` varchar(16) NOT NULL,
-	`directory` varchar(128) NOT NULL
+	`directory` varchar(128) NOT NULL,
 	`latitudeN` float(7, 4) NOT NULL,
 	`latitudeS` float(7, 4) NOT NULL,
 	`longitudeE` float(7, 4) NOT NULL,
-	`longitudeW` float(7, 4) NOT NULL
+	`longitudeW` float(7, 4) NOT NULL,
 
 	PRIMARY KEY (`flightId`)
 );
