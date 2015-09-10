@@ -209,7 +209,6 @@ def save_images_to_db(images, flight, host, database, username, password):
 			print err
 
 		# close the connection and return
-	  	cnx.close()
 	  	return False
 
 	# prepare our cursor
