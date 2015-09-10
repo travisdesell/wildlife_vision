@@ -219,12 +219,14 @@ def save_images_to_db(images, flight, host, database, username, password):
 		# prepare our flight for insertion
 		addFlight = (
 			"INSERT INTO tblFlights "
-			"(timestamp, name, latitudeN, latitudeS, longitudeE, longitudeW) "
+			"(timestamp, name, directory, latitudeN, latitudeS, longitudeE, longitudeW) "
 			"VALUES (%s, %s, %f, %f, %f, %f)"
 		)
 
 		flightData = (
-			flight.timestamp, flight.name,
+			flight.timestamp, 
+			flight.directory,
+			flight.name,
 			flight.latitudeN, flight.latitudeS,
 			flight.longitudeE, flight.longitudeW
 		)
@@ -281,8 +283,8 @@ if __name__ == '__main__':
 	argparser.add_argument('username', type=str, 
 		help='Username for database connection'
 	)
-	argparser.add_argument('password', type=str,
-		help='Password for database connection'
+	argparser.add_argument('--password', type=str,
+		help='Password for database connection', default=''
 	)
 	args = argparser.parse_args()
 
