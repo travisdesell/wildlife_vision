@@ -12,17 +12,38 @@ are moved, however, so that the naming can be first verified by hand.
 """
 
 import os, sys
+import glob
+
+def split_number(filename):
+	"""
+	Splits the text, number, extension from the filename.
+
+	Returns a tuple with (basename, number, padding, extension)
+	"""
+
+	# split the file into name and extension
+	(basename, extension) = filename.split('.')
+
+	# go up to the first number
+	i = 0
+	length = len(basename)
+	while i < length and !basename[i].isnumeric():
+		i = i + 1
+
+	if i == length:
+		return (basename, 0, 0, extension)
+
+	return (basename[0:(i-1)], int(basename[i:-1]), length - i + 1, extension)
+
 
 def find_last_image_number(directory):
 	"""Finds the last image number in a given directory."""
 
-	import glob
-
 	# find the last image
 	lastNumber = -1
 	for filename in glob.iglob(os.path.join(directory, '*.jpg')):
-		number = int(filename[-9:-5])
-		if number > lastNumber:
+		(basename, number, padding, extension) = split_number(filename)
+		if padding and number > lastNumber:
 			lastNumber = number
 
     # make sure we found images
@@ -40,9 +61,10 @@ def rename_images_from_number(directory, start):
 	files = glob.glob(os.path.join(directory, '*.jpg'))
 	number = start
 	for filename in sorted(files):
+		(basename, oldnumber, padding, extension) = split_number(filename)
 		newfilename = '{}{}.jpg'.format(
-			filename[0:-9],
-			str(number).zfill(5)
+			basename,
+			str(number).zfill(padding)
 		)
 
 		#shutil.move(filename, newfilename)
