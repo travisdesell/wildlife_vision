@@ -13,11 +13,41 @@ are moved, however, so that the naming can be first verified by hand.
 
 import os, sys
 
-def find_last_image_number(dir):
+def find_last_image_number(directory):
 	"""Finds the last image number in a given directory."""
 
-def rename_images_from_number(dir, start):
+	import glob
+
+	# find the last image
+	lastNumber = -1
+	for filename in glob.iglob(os.path.join(directory, '*.jpg')):
+		number = int(filename[-9:-5])
+		if number > lastNumber:
+			lastNumber = number
+
+    # make sure we found images
+	if lastNumber < 0:
+		raise IOError('No .JPG files in folder: {}'.format(directory))
+
+	return lastNumber
+
+def rename_images_from_number(directory, start):
 	"""Renames the images starting with the given number."""
+
+	import shutil
+
+	# move the files in order
+	files = glob.glob(os.path.join(directory, '*.jpg'))
+	number = start
+	for filename in sorted(files):
+		newfilename = '{}{}.jpg'.format(
+			filename[0:-9],
+			str(number).zfill(5)
+		)
+
+		#shutil.move(filename, newfilename)
+		print 'Moving {} to {}'.format(filename, newfilename)
+		number = number + 1
 
 if __name__ == '__main__':
 	import argparse

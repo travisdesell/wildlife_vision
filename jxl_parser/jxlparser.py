@@ -7,6 +7,7 @@ in a given database.
 
 import xml.etree.ElementTree as XMLParser
 import os
+import datetime
 
 class JXLFlight:
 	"""JXLFlight stores all metadata information about a particular flight in
@@ -217,25 +218,19 @@ def save_images_to_db(images, flight, host, database, username, password):
 	credentials provided.
 	"""
 
-	import mysql.connector
-	from mysql.connector import errorcode
+	import MySQLdb as mysql
 
 	try:
 		# connect to the database
-		cnx = mysql.connector.connect(
+		cnx = mysql.connect(
 			host=host,
 			user=username,
-			password=password,
-	        database=database
+			passwd=password,
+	        db=database
 	    )
-	except mysql.connector.Error as err:
+	except:
 		# print out any errors
-	  	if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-			print "Something is wrong with your user name or password"
-	  	elif err.errno == errorcode.ER_BAD_DB_ERROR:
-			print "Database does not exist"
-	  	else:
-			print err
+	  	print "Error connecting to the DB"
 
 		# close the connection and return
 	  	return False
@@ -249,47 +244,91 @@ def save_images_to_db(images, flight, host, database, username, password):
 		addFlight = (
 			"INSERT INTO tblFlights "
 			"(timestamp, name, directory, latitudeN, latitudeS, longitudeE, longitudeW) "
-			"VALUES (%s, %s, %f, %f, %f, %f)"
+			"VALUES ('{}', '{}', '{}', {}, {}, {}, {})"
+		)
+		findFlight = (
+			"SELECT * FROM tblFlights "
+			"WHERE timestamp='{}'"
 		)
 
-		flightData = (
-			flight.timestamp, 
-			flight.directory,
-			flight.name,
-			flight.latitudeN, flight.latitudeS,
-			flight.longitudeE, flight.longitudeW
-		)
 
-		# insert our flight
-		cursor.execute(addFlight, flightData)
-		flightId = cursor.lastrowid
+		# see if the flight exists
+		flightSql = findFlight.format(
+			datetime.datetime.strptime(flight.timestamp, "%Y-%m-%dT%H:%M:%S").strftime('%Y-%m-%d %H:%M:%S')
+		)
+		
+		cursor.execute(flightSql)
+		result = cursor.fetchone()
+		flightId = 0
+		if result:
+			print 'Found existing flight'
+			flightId = result[0]
+		else:
+			flightSql = addFlight.format(
+				datetime.datetime.strptime(flight.timestamp, "%Y-%m-%dT%H:%M:%S").strftime('%Y-%m-%d %H:%M:%S'), 
+				flight.directory,
+				flight.name,
+				flight.latitudeN, flight.latitudeS,
+				flight.longitudeE, flight.longitudeW
+			)
+
+			# insert our flight
+			cursor.execute(addFlight.format(
+				datetime.datetime.strptime(flight.timestamp, "%Y-%m-%dT%H:%M:%S").strftime('%Y-%m-%d %H:%M:%S'), 
+				flight.directory,
+				flight.name,
+				flight.latitudeN, flight.latitudeS,
+				flight.longitudeE, flight.longitudeW
+			))
+
+			flightId = cursor.lastrowid
+			cnx.commit()
+			print "Added flight"
+
+		print 'FlightID: {}'.format(flightId)
 
 		# prepare our images for insertion
 		addImage = (
 			"INSERT INTO tblImages "
 			"(flightId, timestamp, name, latitude, longitude, height, yaw, "
 			"pitch, roll, img_width, img_height) "
-			"VALUES (%d, %s, %s, %f, %f, %f, %f, %f, %f, %d, %d)"
+			"VALUES ({}, '{}', '{}', {}, {}, {}, {}, {}, {}, {}, {})"
+		)
+
+		findImage = (
+			"SELECT * FROM tblImages "
+			"WHERE flightId={} AND name='{}'"
 		)
 
 		# add all of our images
+		count = 0
 		for key, image in images.iteritems():
-			imageData = (
+			# see if the image already exists, otherwise add it
+			cursor.execute(findImage.format(
 				flightId,
-				image.timestamp,
-				image.filename,
-				image.latitude, image.longitude, image.height,
-				image.yaw, image.pitch, image.roll,
-				image.img_width, image.img_height
-			)
+				image.filename
+			))
 
-			cursor.execute(addImage, imageData)
+			result = cursor.fetchone()
+			if result:
+				print 'Found existing image: {}'.format(image.filename)
+			else:
+				cursor.execute(addImage.format(
+					flightId,
+					datetime.datetime.strptime(image.timestamp, "%Y-%m-%dT%H:%M:%S").strftime('%Y-%m-%d %H:%M:%S'),
+					image.filename,
+					image.latitude, image.longitude, image.height,
+					image.yaw, image.pitch, image.roll,
+					image.img_width, image.img_height
+				))
+				count = count + 1
 
 		# commit our changes to the database
 		cnx.commit()
-	except mysql.connector.Error as err:
+		print 'Added {} images.'.format(count)
+	except:
 		# print out any errors
-		print err
+		print "Error submitting to database"
 		success = False
 
 		# rollback the changes
