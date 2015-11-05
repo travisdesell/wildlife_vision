@@ -191,8 +191,6 @@ if __name__ == '__main__':
 	argparser.add_argument('--split', type=int, help='Amount to split images into', default=25)
 	args = argparser.parse_args()
 
-	images = parse(args.filename)
-
 	split_all_images_to_db(
 		host=args.host,
 		database=args.database,
