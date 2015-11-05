@@ -106,7 +106,7 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 		print 'Added {} split images.'.format(count)
 		added = added + 1
 	except:
-		print 'Error submitting to the database.'
+		print 'Error submitting split images to the database.'
 		success = False
 		cnx.rollback()
 	finally:
