@@ -32,6 +32,7 @@ class SplitImage:
 		self.height = height
 
 def split_and_save_images(image, prefix, directory, split):
+	print "slicing image"
 	# split the image without saving
 	tiles = image_slicer.slice(image.filename, split, save=False)
 
@@ -52,6 +53,7 @@ def split_and_save_images(image, prefix, directory, split):
 		)
 
 		# save and append to our array
+		print "saving image"
 		tile.save(
 			filename=os.path.join(directory, split_image.name),
 			prefix='jpg'
@@ -68,6 +70,9 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 	"""
 
 	tiles = split_and_save_images(image, prefix, directory, split)
+	if not tiles:
+		print "No tiles created"
+		return False
 	success = True
 
 	try:
