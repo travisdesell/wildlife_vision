@@ -172,6 +172,7 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 				directory,
 				split
 			)
+			row = cursor.fetchone()
 
 		print 'Added {} split images.'.format(added)
 	except:
