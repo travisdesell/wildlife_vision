@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS `tblSplitImages` (
 
 CREATE TABLE IF NOT EXISTS `tblSpecies` (
 	`speciesId` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(32) NOT NULL
+	`name` varchar(32) NOT NULL,
+
+	PRIMARY KEY (`speciesId`)
 );
 
 CREATE TABLE IF NOT EXISTS `tblObjects` (
