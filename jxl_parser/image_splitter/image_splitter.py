@@ -34,8 +34,13 @@ class SplitImage:
 def split_and_save_images(image, prefix, directory, split):
 	print "slicing image: {}".format(image.filename)
 	# split the image without saving
-	tiles = image_slicer.slice(image.filename, split, save=False)
-	if not tiles:
+	try:
+		tiles = image_slicer.slice(image.filename, split, save=False)
+		if not tiles:
+			print "Error slicing image".format(image.filename)
+			return None
+	except:
+		print "Error slicing image".format(image.filename)
 		return None
 
 	# start our storage structure
