@@ -35,7 +35,9 @@ def split_and_save_images(image, prefix, directory, split):
 	print "slicing image"
 	# split the image without saving
 	tiles = image_slicer.slice(image.filename, split, save=False)
-
+	if not tiles:
+		return None
+		
 	# start our storage structure
 	split_images = []
 	width = int(image.width / sqrt(split))
