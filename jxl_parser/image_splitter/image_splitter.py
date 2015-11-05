@@ -145,6 +145,7 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 		# go through all the images and split them
 		row = cursor.fetchone()
 		while row:
+			print row
 			(flightId, imageId, name, img_height, img_width, flightDirectory) = row
 			image = Image(
 				imageId=imageId,
