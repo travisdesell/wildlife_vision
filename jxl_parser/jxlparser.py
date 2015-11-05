@@ -266,8 +266,8 @@ def save_images_to_db(images, flight, host, database, username, password):
 		else:
 			flightSql = addFlight.format(
 				datetime.datetime.strptime(flight.timestamp, "%Y-%m-%dT%H:%M:%S").strftime('%Y-%m-%d %H:%M:%S'), 
-				flight.directory,
 				flight.name,
+				flight.directory,
 				flight.latitudeN, flight.latitudeS,
 				flight.longitudeE, flight.longitudeW
 			)
@@ -275,8 +275,8 @@ def save_images_to_db(images, flight, host, database, username, password):
 			# insert our flight
 			cursor.execute(addFlight.format(
 				datetime.datetime.strptime(flight.timestamp, "%Y-%m-%dT%H:%M:%S").strftime('%Y-%m-%d %H:%M:%S'), 
-				flight.directory,
 				flight.name,
+				flight.directory,
 				flight.latitudeN, flight.latitudeS,
 				flight.longitudeE, flight.longitudeW
 			))
