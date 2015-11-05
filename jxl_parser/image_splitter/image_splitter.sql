@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `tblSplitImages` (
 	`splitImageId` int(11) NOT NULL AUTO_INCREMENT,
 	`imageId` int(11) NOT NULL,
+	`name` varchar(32) NOT NULL,
 	`top` int(4) NOT NULL,
 	`left` int(4) NOT NULL,
 	`width` int(4) NOT NULL,
