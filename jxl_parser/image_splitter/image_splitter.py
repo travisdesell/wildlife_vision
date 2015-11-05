@@ -36,7 +36,7 @@ def split_and_save_images(image, prefix, directory, split):
 	# split the image without saving
 	try:
 		tiles = image_slicer.slice(image.filename, split, save=False)
-		tiles[1].number
+		tiles[1].width
 	except:
 		print "Error slicing image".format(image.filename)
 		return None
