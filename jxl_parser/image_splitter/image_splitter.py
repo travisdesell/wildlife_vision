@@ -79,6 +79,8 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 	directory and stores their metadata in the database.
 	"""
 
+	global skipped, added
+
 	try:
 		addSplitImage = (
 			"INSERT INTO tblSplitImages "
@@ -138,6 +140,8 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 def split_all_images_to_db(host, database, username, password, directory, split):
 	"""Splits all the images (that haven't been split) and stores
 	the saved split images to the database and directory."""
+
+	global skipped, added
 
 	try:
 		# connect to the database
@@ -203,6 +207,8 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 		cnx2.close()
 		cnx.close()
 
+	if skipped:
+		print 'Skipped {} images.'.format(skipped)
 	return success
 
 if __name__ == '__main__':
