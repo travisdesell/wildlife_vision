@@ -37,7 +37,7 @@ def split_and_save_images(image, prefix, directory, split):
 	# split the image without saving
 	try:
 		tiles = image_slicer.slice(image.filename, split, save=False)
-		if tiles[1].width:
+		if tiles[1].image:
 			pass
 	except:
 		print "\tError slicing image"
@@ -45,18 +45,16 @@ def split_and_save_images(image, prefix, directory, split):
 
 	# start our storage structure
 	split_images = []
-	width = int(image.width / sqrt(split))
-	height = int(image.height / sqrt(height))
 
 	# go through and create the images for return and save
 	for tile in tiles:
 		# create the split image
 		split_image = SplitImage(
 			prefix + '{%d}.png'.format(tile.number),
-			(tile.row() - 1) * height,
-			(tile.col() - 1) * width,
-			width,
-			height
+			tile.coords[1],
+			tile.coords[0],
+			tile.image.width,
+			tile.image.height
 		)
 
 		# save and append to our array
