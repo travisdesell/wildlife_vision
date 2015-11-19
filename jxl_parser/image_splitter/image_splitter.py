@@ -82,7 +82,7 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 	try:
 		addSplitImage = (
 			"INSERT INTO tblSplitImages "
-			"('imageId', 'name', 'top', 'left', 'width', 'height') "
+			"(`imageId`, `name`, `top`, `left`, `width`, `height`) "
 			"VALUES ({}, '{}', {}, {}, {}, {})"
 		)
 
