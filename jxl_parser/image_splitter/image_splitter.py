@@ -116,8 +116,8 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 				tile.height
 			)
 			print '\t{}'.format(statement)
-			cnx.commit()
 			cursor.execute(statement)
+			cnx.commit()
 			count = count + 1
 
 		# save the changes
