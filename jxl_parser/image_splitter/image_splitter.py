@@ -50,21 +50,23 @@ def split_and_save_images(image, prefix, directory, split):
 	for tile in tiles:
 		# create the split image
 		split_image = SplitImage(
-			prefix + '{%d}.png'.format(tile.number),
-			tile.coords[1],
-			tile.coords[0],
-			tile.image.width,
-			tile.image.height
+			name='{}{}.png'.format(prefix, tile.number),
+			top=tile.coords[1],
+			left=tile.coords[0],
+			width=tile.image.width,
+			height=tile.image.height
 		)
 
 		# save and append to our array
 		print "\tSaving image: {}".format(os.path.join(directory, split_image.name))
-		tile.save(
-			filename=os.path.join(directory, split_image.name),
-			prefix='jpg'
-		)
-
-		split_images.append(split_image)
+		try:
+			tile.save(
+				filename=os.path.join(directory, split_image.name),
+				prefix='jpg'
+			)
+			split_images.append(split_image)
+		except:
+			print "\tError saving image!"
 
 	# return the split images array
 	return split_images
@@ -96,6 +98,7 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 
 		if cursor.fetchone():
 			skipped = skipped + 1
+			print "Skipping already submitted image: {}".format(image.imageId)
 			return True
 
 		# prepare each tile insertion
