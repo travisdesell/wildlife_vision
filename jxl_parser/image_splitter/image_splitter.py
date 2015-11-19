@@ -77,12 +77,6 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 	directory and stores their metadata in the database.
 	"""
 
-	tiles = split_and_save_images(image, prefix, directory, split)
-	if not tiles:
-		print "No tiles created"
-		return False
-	success = True
-
 	try:
 		addSplitImage = (
 			"INSERT INTO tblSplitImages "
@@ -100,7 +94,15 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 		if cursor.fetchone():
 			skipped = skipped + 1
 			print "Skipping already submitted image: {}".format(image.imageId)
+			cursor.close()
 			return True
+
+		# split and save the files
+		tiles = split_and_save_images(image, prefix, directory, split)
+		if not tiles:
+			print "No tiles created"
+			return False
+		success = True
 
 		# prepare each tile insertion
 		count = 0
@@ -175,11 +177,11 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 			)
 
 			success = success and split_image_to_db(
-				image,
-				flightId,
-				cnx2,
-				directory,
-				split
+				image=image,
+				prefix='{}_{}_'.format(flightId, imageId),
+				cnx=cnx2,
+				directory=directory,
+				split=split
 			)
 			row = cursor.fetchone()
 
