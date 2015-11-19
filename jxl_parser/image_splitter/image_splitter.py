@@ -60,7 +60,7 @@ def split_and_save_images(image, prefix, directory, split):
 		)
 
 		# save and append to our array
-		print "\tSaving image: {}".format(os.path.join(directory, split_image.name))
+		#print "\tSaving image: {}".format(os.path.join(directory, split_image.name))
 		try:
 			tile.image.save(
 				os.path.join(directory, split_image.name),
