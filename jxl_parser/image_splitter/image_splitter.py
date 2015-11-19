@@ -136,7 +136,7 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 			passwd=password,
 	        db=database
 	    )
-	    cnx2 = mysql.connect(
+		cnx2 = mysql.connect(
 			host=host,
 			user=username,
 			passwd=password,
