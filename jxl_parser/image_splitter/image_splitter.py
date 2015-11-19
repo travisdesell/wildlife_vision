@@ -62,7 +62,7 @@ def split_and_save_images(image, prefix, directory, split):
 		try:
 			tile.save(
 				filename=os.path.join(directory, split_image.name),
-				prefix='jpg'
+				format='jpeg'
 			)
 			split_images.append(split_image)
 		except:
