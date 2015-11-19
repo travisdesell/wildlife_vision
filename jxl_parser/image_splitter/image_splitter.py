@@ -6,7 +6,7 @@ images into multiple images, storing them in our database based on
 image_splitter.sql.
 """
 
-import os
+import os, sys
 import datetime
 import image_slicer
 import MySQLdb as mysql
@@ -42,6 +42,7 @@ def split_and_save_images(image, prefix, directory, split):
 			return None
 	except:
 		print "\tError slicing image"
+		print "\t", sys.exc_info()[0]
 		return None
 
 	# start our storage structure
@@ -68,6 +69,7 @@ def split_and_save_images(image, prefix, directory, split):
 			split_images.append(split_image)
 		except:
 			print "\tError saving image!"
+			print "\t", sys.exc_info()[0]
 
 	# return the split images array
 	return split_images
@@ -125,6 +127,7 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 		added = added + 1
 	except:
 		print 'Error submitting split images to the database.'
+		print "\t", sys.exc_info()[0]
 		success = False
 		cnx.rollback()
 	finally:
@@ -153,6 +156,7 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 	except:
 		# print out any errors
 	  	print "Error connecting to the DB"
+	  	print "\t", sys.exc_info()[0]
 	  	return False
 
 	cursor = cnx.cursor()
@@ -191,6 +195,7 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 	except:
 		# print out any errors
 		print "Error submitting to database"
+		print "\t", sys.exc_info()[0]
 		success = False
 	finally:
 		# close the cursor and connection
