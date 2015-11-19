@@ -107,14 +107,16 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 		# prepare each tile insertion
 		count = 0
 		for tile in tiles:
-			cursor.execute(addSplitImage.format(
+			statement = addSplitImage.format(
 				image.imageId,
 				tile.name,
 				tile.top,
 				tile.left,
 				tile.width,
 				tile.height
-			))
+			)
+			print '\t{}'.format(statement)
+			cursor.execute(statement)
 			cnx.commit()
 			count = count + 1
 
