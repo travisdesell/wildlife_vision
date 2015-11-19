@@ -50,7 +50,7 @@ def split_and_save_images(image, prefix, directory, split):
 	for tile in tiles:
 		# create the split image
 		split_image = SplitImage(
-			name='{}{}.png'.format(prefix, tile.number),
+			name='{}{}.jpg'.format(prefix, tile.number),
 			top=tile.coords[1],
 			left=tile.coords[0],
 			width=tile.image.width,
