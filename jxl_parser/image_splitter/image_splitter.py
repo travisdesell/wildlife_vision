@@ -119,7 +119,7 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 				tile.width,
 				tile.height
 			)
-			print '\t{}'.format(statement)
+			#print '\t{}'.format(statement)
 			cursor.execute(statement)
 			count = count + 1
 
