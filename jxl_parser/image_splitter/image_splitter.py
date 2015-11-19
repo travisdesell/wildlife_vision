@@ -82,7 +82,7 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 	try:
 		addSplitImage = (
 			"INSERT INTO tblSplitImages "
-			"(imageId, name, top, left, width, height) "
+			"('imageId', 'name', 'top', 'left', 'width', 'height') "
 			"VALUES ({}, '{}', {}, {}, {}, {})"
 		)
 
@@ -119,10 +119,10 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 			)
 			print '\t{}'.format(statement)
 			cursor.execute(statement)
-			cnx.commit()
 			count = count + 1
 
 		# save the changes
+		cnx.commit()
 		print 'Added {} split images.'.format(count)
 		added = added + 1
 	except:
