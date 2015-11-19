@@ -136,6 +136,12 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 			passwd=password,
 	        db=database
 	    )
+	    cnx2 = mysql.connect(
+			host=host,
+			user=username,
+			passwd=password,
+	        db=database
+	    )
 	except:
 		# print out any errors
 	  	print "Error connecting to the DB"
@@ -167,7 +173,7 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 			success = success and split_image_to_db(
 				image,
 				flightId,
-				cnx,
+				cnx2,
 				directory,
 				split
 			)
@@ -181,6 +187,7 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 	finally:
 		# close the cursor and connection
 		cursor.close()
+		cnx2.close()
 		cnx.close()
 
 	return success
