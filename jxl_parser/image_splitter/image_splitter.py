@@ -115,10 +115,10 @@ def split_image_to_db(image, prefix, cnx, directory, split):
 				tile.width,
 				tile.height
 			))
+			cnx.commit()
 			count = count + 1
 
 		# save the changes
-		cnx.commit()
 		print 'Added {} split images.'.format(count)
 		added = added + 1
 	except:
