@@ -37,9 +37,10 @@ def split_and_save_images(image, prefix, directory, split):
 	# split the image without saving
 	try:
 		tiles = image_slicer.slice(image.filename, split, save=False)
-		tiles[1].width
+		if tiles[1].width:
+			pass
 	except:
-		print "Error slicing image".format(image.filename)
+		print "\tError slicing image"
 		return None
 
 	# start our storage structure
@@ -59,7 +60,7 @@ def split_and_save_images(image, prefix, directory, split):
 		)
 
 		# save and append to our array
-		print "Saving image"
+		print "\tSaving image: {}".format(os.path.join(directory, split_image.name))
 		tile.save(
 			filename=os.path.join(directory, split_image.name),
 			prefix='jpg'
@@ -175,7 +176,7 @@ def split_all_images_to_db(host, database, username, password, directory, split)
 			)
 			row = cursor.fetchone()
 
-		print 'Added {} split images.'.format(added)
+		print 'Split {} images.'.format(added)
 	except:
 		# print out any errors
 		print "Error submitting to database"
