@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `tblObjects` (
 CREATE TABLE IF NOT EXISTS `tblPhases` (
 	`phaseId` int(11) NOT NULL AUTO_INCREMENT,
 	`speciesId` int(11) NOT NULL,
-	`name` varchar(32) NOT NULL
+	`name` varchar(32) NOT NULL,
 
 	PRIMARY KEY (`phaseId`),
 	INDEX(`speciesId`),
