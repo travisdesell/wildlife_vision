@@ -42,5 +42,5 @@ def parse_csv(fname, out_dir):
     f.close()
 
 def parse_csvs(basename, out_dir):
-    parse_csv('{}_single.txt'.format(basename), os.path.join(out_dir, 'single'))
-    parse_csv('{}_multiple.txt'.format(basename), os.path.join(out_dir, 'multiple'))
+    parse_csv('{}_single.csv'.format(basename), os.path.join(out_dir, 'single'))
+    parse_csv('{}_multiple.csv'.format(basename), os.path.join(out_dir, 'multiple'))

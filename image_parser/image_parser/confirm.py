@@ -39,10 +39,11 @@ class ConfirmTests:
 
     def test_all(self):
         """Runs all of our tests."""
+        self.area_test(50)
+        self.area_test(60)
+        self.area_test(70)
         self.area_test(80)
         self.area_test(90)
-        self.area_test(95)
-        self.area_test(99)
 
         self.point_test(5)
         self.point_test(10)

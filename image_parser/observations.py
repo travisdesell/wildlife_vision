@@ -11,9 +11,10 @@ if __name__ == '__main__':
 
     out_dir = args.out_dir
     if not out_dir:
+        import os
         out_dir = os.path.dirname(args.fname)
 
-    from image_parser.observations import parse_csv
+    from image_parser.observations import parse_csvs
     parse_csvs(
         basename=args.fname,
         out_dir=out_dir

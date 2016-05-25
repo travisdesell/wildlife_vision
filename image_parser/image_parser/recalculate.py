@@ -9,6 +9,9 @@ class RecalculateJson:
         self.out_dir = out_dir
         print 'Internal output directory: {}\n\n'.format(self.out_dir)
 
+        if not os.path.exists(out_dir):
+            os.mkdir(out_dir)
+
         # load in data to recalculate the JSON
         self.data = {}
         data_file.readline()

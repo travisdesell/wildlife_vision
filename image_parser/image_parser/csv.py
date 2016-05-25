@@ -13,9 +13,13 @@ def create_csv(f, out_dir=None):
 
     data = json.load(f)
     for p_id, images in data.iteritems():
+        opath = os.path.join(out_dir, p_id)
+        if not os.path.exists(opath):
+            os.mkdir(opath)
+
         fmatched = open(
                 os.path.join(
-                    out_dir,
+                    opath,
                     '{}_{}_matched.csv'.format(p_id, fname)
                 ),
                 'w'
@@ -23,7 +27,7 @@ def create_csv(f, out_dir=None):
 
         funmatched = open(
                 os.path.join(
-                    out_dir,
+                    opath,
                     '{}_{}_unmatched.csv'.format(p_id, fname)
                 ),
                 'w'
@@ -87,7 +91,7 @@ def create_comparison_csv(master, fs, out_dir=None):
             ))
 
     for p_id in output:
-        fname = os.path.join(out_dir, '{}_comparison.csv'.format(p_id))
+        fname = os.path.join(out_dir, p_id, '{}_comparison.csv'.format(p_id))
         fout = open(fname, 'w')
         try:
             fout.write('Method,Count,Matched,Missing,WrongSpecies,MatchedRatioVsReal,MissingRatioVsReal,WrongSpeciesDifferenceVsReal\n')

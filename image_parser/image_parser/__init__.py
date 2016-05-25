@@ -1,4 +1,7 @@
 class Observation:
+    """This class is for a single Observation and function to compare
+    two Observations together."""
+
     def __init__(self, user_id, species_id, x, y, width, height, iob_id):
         self.user_id = user_id
         self.s_id = species_id

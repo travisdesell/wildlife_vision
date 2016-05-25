@@ -28,7 +28,7 @@ def save_db(host, database, username, password, fname):
     """Saves the currrent state of the database."""
 
     select = (
-        "SELECT i.project_id, i.id, io.id, iob.id, io.user_id, i.archive_filename, iob.x, iob.y, iob.width, iob.height, iob.species_id, i.watermarked_filename "
+        "SELECT i.project_id, i.id, io.id, iob.id, io.user_id, i.archive_filename, iob.x, iob.y, iob.width, iob.height, iob.species_id, i.watermarked_filename, iob.on_nest "
         "FROM image_observations as io "
             "INNER JOIN images as i ON i.id = io.image_id "
             "INNER JOIN image_observation_boxes as iob ON iob.image_observation_id = io.id "
