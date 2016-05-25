@@ -56,7 +56,7 @@ def split_and_save_images(image, directory, split):
     for tile in tiles:
         # create the split image
         split_image = SplitImage(
-                name='{}.jpg'.format(tile.number),
+                name='{}.png'.format(tile.number),
                 x=tile.coords[0],
                 y=tile.coords[1],
                 width=tile.image.size[0],
@@ -70,9 +70,9 @@ def split_and_save_images(image, directory, split):
         #print "\tSaving image: {}".format(os.path.join(directory, split_image.name))
         try:
             tile.image.save(
-                    split_image.filename,
-                    'jpeg'
-                    )
+                    fp=split_image.filename,
+                    format='png'
+            )
             print "\tImage saved: ", split_image.filename
             split_images.append(split_image)
         except:
@@ -182,6 +182,8 @@ def split_all_images_to_db(host, database, username, password, directory, split)
     global skipped, added
 
     try:
+        print "Connection info: ", username, "@", host, ":", database, "(", password, ")"
+
         # connect to the database
         cnx = mysql.connect(
             host=host,

@@ -1,0 +1,2 @@
+MySQL-python>=1.2.5
+image_slicer>=0.1.1
