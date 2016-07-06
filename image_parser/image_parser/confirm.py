@@ -70,7 +70,14 @@ class ConfirmTests:
                 for user_id in user_ids:
                     i_count = i_count + len(users[user_id])
 
-                last_matched = []
+                # add all our last row to the not_matched dict
+                not_matched = {}
+                for o in users[user_ids[len(user_ids)-1]]:
+                    not_matched[o.iob_id] = {
+                            'user_id': o.user_id,
+                            's_id': o.s_id,
+                            'iob_id': o.iob_id
+                    }
 
                 # go from left to right, not looking back
                 for i in range(len(user_ids)-1):
@@ -89,8 +96,8 @@ class ConfirmTests:
 
                                     # add to last matched, if needed
                                     if (j == (len(user_ids) - 1)):
-                                        if not o2.iob_id in last_matched:
-                                            last_matched.append(o2.iob_id)
+                                        if o2.iob_id in not_matched:
+                                            del not_matched[o2.iob_id]
 
                                     matched = True
                                     i_matches = i_matches + 1
@@ -113,11 +120,17 @@ class ConfirmTests:
                                     })
 
                         if not matched:
-                            i_missing = i_missing + 1
+                            not_matched[o1.iob_id] = {
+                                    'user_id': o1.user_id,
+                                    's_id': o1.s_id,
+                                    'iob_id': o1.iob_id
+                            }
 
+                # store the non-matched values for later calcs
+                results[p_id][i_id]['not_matched'] = not_matched
 
                 # store the count for this image
-                i_missing = i_missing + len(users[user_ids[-1]]) - len(last_matched)
+                i_missing = len(not_matched)
                 results[p_id][i_id]['missing'] = i_missing
                 p_missing = p_missing + i_missing
 

@@ -63,6 +63,10 @@ class RecalculateJson:
                 i_wrong_species = 0
                 i_distinct = []
                 i_results = []
+                if 'not_matched' in i_data:
+                    i_not_matched = i_data['not_matched']
+                else:
+                    i_not_matched = {}
 
                 for result in i_data['results']:
                     user_1 = result['user1']
@@ -133,7 +137,8 @@ class RecalculateJson:
                     'count': i_count,
                     'missing': i_missing,
                     'wrong_species': i_wrong_species,
-                    'results': i_results
+                    'results': i_results,
+                    'not_matched': i_not_matched
                 }
 
             new_results[p_id]['matches'] = p_matches

@@ -57,6 +57,20 @@ def create_csv(f, out_dir=None):
             fmatched.close()
             funmatched.close()
 
+def match_in_master(p_id, i_id, master_data, user, user2=None):
+    """Determines if a given match is in the master."""
+    for result in master_data[p_id][i_id]['results']:
+        if result['user_1']['iob_id'] == user['iob_id']:
+            if not user2 or result['user_2']['iob_id'] == user2['iob_id']:
+                return True
+
+        if result['user_2']['iob_id'] == user['iob_id']:
+            if not user2 or result['user_1']['iob_id'] == user2['iob_id']:
+                return True
+
+    return False
+
+
 def create_comparison_csv(master, fs, out_dir=None):
     """Creates a comparison CSV file based on the master."""
     if not out_dir:
@@ -79,6 +93,40 @@ def create_comparison_csv(master, fs, out_dir=None):
             if not p_id in output:
                 output[p_id] = []
 
+            # count the false values
+            false_positives = 0
+            false_negatives = 0
+
+            for i_id, i_data in images.iteritems():
+                if not isinstance(i_data, dict) or not 'results' in i_data:
+                    continue
+
+                for result in i_data['results']:
+                    matched = match_in_master(
+                        p_id=p_id,
+                        i_id=i_id,
+                        master_data=master_data,
+                        user=result['user_1'],
+                        user2=result['user_2'],
+                    )
+
+                    if not matched:
+                        false_positives = false_positives + 1
+
+                if not 'not_matched' in i_data:
+                    continue
+
+                for iob_id, not_matched in i_data['not_matched'].iteritems():
+                    matched = match_in_master(
+                        p_id=p_id,
+                        i_id=i_id,
+                        master_data=master_data,
+                        user=not_matched
+                    )
+
+                    if matched:
+                        false_negatives = false_negatives + 1
+
             output[p_id].append((
                 method,
                 images['count'],
@@ -87,16 +135,18 @@ def create_comparison_csv(master, fs, out_dir=None):
                 images['wrong_species'],
                 float(images['matches']) / master_data[p_id]['matches'],
                 float(images['missing']) / master_data[p_id]['missing'],
-                images['wrong_species'] - master_data[p_id]['wrong_species']
+                images['wrong_species'] - master_data[p_id]['wrong_species'],
+                false_positives,
+                false_negatives
             ))
 
     for p_id in output:
         fname = os.path.join(out_dir, p_id, '{}_comparison.csv'.format(p_id))
         fout = open(fname, 'w')
         try:
-            fout.write('Method,Count,Matched,Missing,WrongSpecies,MatchedRatioVsReal,MissingRatioVsReal,WrongSpeciesDifferenceVsReal\n')
+            fout.write('Method,Count,Matched,Missing,WrongSpecies,MatchedRatioVsReal,MissingRatioVsReal,WrongSpeciesDifferenceVsReal,FalsePositives,FalseNegatives\n')
 
-            fout.write('Real,{},{},{},{},1,1,0\n'.format(
+            fout.write('Real,{},{},{},{},1,1,0,0,0\n'.format(
                 master_data[p_id]['count'],
                 master_data[p_id]['matches'],
                 master_data[p_id]['missing'],
