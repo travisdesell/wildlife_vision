@@ -8,7 +8,6 @@ image_splitter.sql.
 
 import os, sys, glob
 import datetime
-import image_slicer
 import MySQLdb as mysql
 
 skipped = 0
@@ -26,7 +25,7 @@ def add_mosaics_to_db(host, database, username, password, directory, project_id)
         cnx = mysql.connect(
             host=host,
             user=username,
-			passwd=password,
+            passwd=password,
             db=database
         )
     except:
@@ -87,7 +86,7 @@ if __name__ == '__main__':
 	argparser = argparse.ArgumentParser(
 		description='Adds all mosaics in a directory to the database.'
 	)
-    argparser.add_argument('project_id', type=int, help='Project ID for the mosaic')
+        argparser.add_argument('project_id', type=int, help='Project ID for the mosaic')
 	argparser.add_argument('directory', type=str, help='Directory where the mosaics are')
 	argparser.add_argument('--host', type=str, help='Database host address', default='localhost')
 	argparser.add_argument('--database', type=str, help='Database', default='')
@@ -105,5 +104,5 @@ if __name__ == '__main__':
 		username=args.username,
 		password=args.password,
 		directory=args.directory,
-        project_id=args.project_id
+                project_id=args.project_id
 	)
