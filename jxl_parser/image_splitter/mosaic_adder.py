@@ -14,7 +14,7 @@ import MySQLdb as mysql
 skipped = 0
 added = 0
 
-def add_mosaics_to_db(host, database, username, password, directory):
+def add_mosaics_to_db(host, database, username, password, directory, project_id):
     """Adds all the mosaics in a folder to the database, if they
     haven't already been added."""
 
@@ -45,8 +45,8 @@ def add_mosaics_to_db(host, database, username, password, directory):
 
     addStatement = (
         "INSERT INTO mosaic_images "
-        "(`timestamp`, `filename`) "
-        "VALUES ('{}', '{}')"
+        "(`timestamp`, `filename`, `project_id`) "
+        "VALUES ('{}', '{}', '{}')"
     )
 
     # walk the directory
@@ -62,7 +62,7 @@ def add_mosaics_to_db(host, database, username, password, directory):
                 continue
 
             now = datetime.datetime.now()
-            statement = addStatement.format(now.strftime("%Y-%m-%d %H:%M:%S"), f)
+            statement = addStatement.format(now.strftime("%Y-%m-%d %H:%M:%S"), f, project_id)
             cursor.execute(statement)
 
             cnx.commit()
@@ -87,6 +87,7 @@ if __name__ == '__main__':
 	argparser = argparse.ArgumentParser(
 		description='Adds all mosaics in a directory to the database.'
 	)
+    argparser.add_argument('project_id', type=int, help='Project ID for the mosaic')
 	argparser.add_argument('directory', type=str, help='Directory where the mosaics are')
 	argparser.add_argument('--host', type=str, help='Database host address', default='localhost')
 	argparser.add_argument('--database', type=str, help='Database', default='')
@@ -103,5 +104,6 @@ if __name__ == '__main__':
 		database=args.database,
 		username=args.username,
 		password=args.password,
-		directory=args.directory
+		directory=args.directory,
+        project_id=args.project_id
 	)

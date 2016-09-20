@@ -1,1 +1,1 @@
-image_slicer>=0.1.1
+image_slicer>=0.1.1Wand>=0.4.3

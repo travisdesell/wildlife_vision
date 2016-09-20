@@ -47,6 +47,7 @@ class MatchBox:
                 continue
 
             results[p_id] = {}
+            s_counts = {}
 
             for i_id, i_data in images.iteritems():
                 if not isinstance(i_data, dict) or not 'results' in i_data:
@@ -65,6 +66,7 @@ class MatchBox:
                     if iob_1 in matched or iob_2 in matched or not iob_1 in observations or not iob_2 in observations:
                         continue
 
+                    species = i_data['results'][i]['user_1']['s_id']
                     boxes = [
                         observations[iob_1],
                         observations[iob_2]
@@ -134,6 +136,7 @@ class MatchBox:
                     # save the json
                     i_count = i_count + 1
                     results[p_id][i_id].append({
+                        'species': species,
                         'average': average,
                         'intersect': intersect,
                         'boxes': boxes
@@ -151,6 +154,19 @@ class MatchBox:
                             os.makedirs(os.path.dirname(intersect['filename']))
                         img = Image.open(self.data[p_id][i_id]['archive_filename'], 'r')
                         img.crop((intersect['x'], intersect['y'], intersect['right'], intersect['bottom'])).save(intersect['filename'])
+                        img.close()
+
+                        if not species in s_counts:
+                            s_counts[species] = 0
+
+                        # just the intersect for use later
+                        ifname = os.path.join(self.out_dir, p_id, 'intersects', species, '{}.png'.format(s_counts[species]))
+                        s_counts[species] = s_counts[species] + 1
+
+                        if not os.path.exists(os.path.dirname(ifname)):
+                            os.makedirs(os.path.dirname(ifname))
+                        img = Image.open(self.data[p_id][i_id]['archive_filename'], 'r')
+                        img.crop((intersect['x'], intersect['y'], intersect['right'], intersect['bottom'])).save(ifname)
                         img.close()
 
         # dump the json results

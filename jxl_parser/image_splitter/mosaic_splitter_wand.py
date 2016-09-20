@@ -9,16 +9,14 @@ image_splitter.sql.
 import os, sys
 import datetime
 import MySQLdb as mysql
+import math
 
-# disable max image size since these are HUGE
-from PIL import Image
-Image.MAX_IMAGE_PIXELS = None
+from wand.image import Image
 
-import image_slicer
 skipped = 0
 added = 0
 
-class Image:
+class ImageBase:
     def __init__(self, imageId, filename, project_id):
         self.imageId = imageId
         self.filename = filename
@@ -40,8 +38,41 @@ def split_and_save_images(image, directory, split):
 
     # split the image without saving
     try:
-        tiles = image_slicer.slice(image.filename, split, save=False)
-        if not tiles[1].image:
+        tiles = []
+
+        with Image(filename=image.filename) as img:
+            d = int(math.sqrt(split))
+            w = int(img.size[0] / d)
+            h = int(img.size[1] / d)
+
+            for y in range(d):
+                for x in range(d):
+                    x_loc = x * w
+                    y_loc = y * h
+                    number =  y * d + x + 1
+
+                    tile = SplitImage(
+                        name='{}.png'.format(number),
+                        x=x_loc, y=y_loc,
+                        width=w, height=h,
+                        directory=directory,
+                        number=number
+                    )
+
+                    # skip files we already have
+                    if os.path.exists(tile.filename):
+                        print "Skipping existing file: ", tile.filename
+                        continue
+
+                    print '\t', tile.filename
+
+                    with img.clone() as i:
+                        i.crop(x_loc, y_loc, width=w, height=h)
+                        i.format = 'png'
+                        i.save(filename=tile.filename)
+                        tiles.append(tile)
+
+        if not tiles or len(tiles) < split:
             print "\tError slicing image"
             return None
     except:
@@ -49,40 +80,8 @@ def split_and_save_images(image, directory, split):
         print "\t", sys.exc_info()[:2]
         raise
 
-    # start our storage structure
-    split_images = []
-
-    # go through and create the images for return and save
-    count = 0
-    for tile in tiles:
-        # create the split image
-        split_image = SplitImage(
-                name='{}.png'.format(tile.number),
-                x=tile.coords[0],
-                y=tile.coords[1],
-                width=tile.image.size[0],
-                height=tile.image.size[1],
-                directory=directory,
-                number=count
-        )
-        count = count + 1
-
-        # save and append to our array
-        #print "\tSaving image: {}".format(os.path.join(directory, split_image.name))
-        try:
-            tile.image.save(
-                    fp=split_image.filename,
-                    format='png'
-            )
-            print "\tImage saved: ", split_image.filename
-            split_images.append(split_image)
-        except:
-            print "\tError saving image!"
-            print "\t", sys.exc_info()[:2]
-            raise
-
     # return the split images array
-    return split_images
+    return tiles
 
 def split_image_to_db(image, cnx, directory, split):
     """Splits an image into multiple images and saves the to the given
@@ -225,7 +224,7 @@ def split_all_images_to_db(host, database, username, password, directory, split)
                 os.makedirs(outdir)
 
             print "\nSaving split images to:", outdir
-            image = Image(
+            image = ImageBase(
                 imageId=imageId,
                 filename=filename,
                 project_id=project_id
