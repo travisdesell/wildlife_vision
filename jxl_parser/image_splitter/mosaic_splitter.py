@@ -49,10 +49,10 @@ def split_and_save_images(image, directory, split):
                 for x in range(d):
                     x_loc = x * w
                     y_loc = y * h
-                    number =  y * d + x + 1
+                    number =  y * d + x
 
                     tile = SplitImage(
-                        name='{}.png'.format(number),
+                        name='{}.png'.format(number+1),
                         x=x_loc, y=y_loc,
                         width=w, height=h,
                         directory=directory,
