@@ -22,7 +22,7 @@ usage = """
 outdir      - the directory to symlink the generated dataset
 imgdir      - the directory where the MSI images are stored
 test%       - the % of the dataset that should be for testing only (0-100)
-background  - the number of background per observation (>= 0)
+background  - the number of background per MSI (5-10)
 binfile     - the location binfiles to include
 """.format(scriptname)
 
@@ -216,28 +216,53 @@ def generate_idx(filename, species_filename, imgdir, background, bg_locations, l
                             fp.write(struct.pack('<BBB', r, g, b))
 
 if __name__ == '__main__':
+    print ''
+
     if len(sys.argv) < 6:
         print usage
         sys.exit(1)
 
+    error = False
     outdir = os.path.abspath(sys.argv[1])
     imgdir = os.path.abspath(sys.argv[2])
     test_percent = int(sys.argv[3])
-    background_percent = int(sys.argv[4])
+    background = int(sys.argv[4])
 
-    print ''
+    if not os.path.isdir(outdir):
+        print 'Cannot find output directory:', outdir
+        error = True
+    if not os.path.isdir(imgdir):
+        print 'Cannot find image directory:', imgdir
+        error = True
+    if test_percent <= 0 or test_percent >= 100:
+        print 'Test percent must be between 1 and 99. Given:', test_percent
+        error = True
+    if background < 5 or background > 10:
+        print 'Background per image must be between 5 and 10. Given:', background
+        error = True
+
+    binfiles = []
+    for binfile in sys.argv[5:]:
+        binfile = os.path.abspath(binfile)
+        if not os.path.isfile(binfile):
+            print 'Cannot find bin file:', binfile
+            error = True
+        binfiles.append(binfile)
+
+    if error:
+        print ''
+        print 'ERRORS OCCURRED. EXITING.'
+        exit(1)
+
     print 'Running', scriptname
     print '-------------------------------------------'
     print 'Output directory:  ', outdir
     print 'Image directory:   ', imgdir
     print 'Test percent:      ', test_percent, '%'
-    print 'Background per obs:', background_percent
+    print 'Background per MSI:', background
     print 'Bin files:'
 
-    binfiles = []
-    for binfile in sys.argv[5:]:
-        binfile = os.path.abspath(binfile)
-        binfiles.append(binfile)
+    for binfile in binfiles:
         print '\t', binfile
 
     # grab all the data for each binfile
@@ -269,14 +294,6 @@ if __name__ == '__main__':
                     obscount = obscount + 1
     print '\t', len(locations), 'unioned MSIs.'
     print '\t', obscount, 'total observations.'
-
-    # determine the number of background per image
-    print 'Determining the number of background per image (min: 5)...'
-    background = obscount * background_percent
-    background = int(background / len(locations))
-    if background < 5:
-        background = 5
-    print '\t', background, 'background per image.'
 
     # split the data into non-obs and obs
     print 'Splitting the data into obs and non-obs MSIs...'
