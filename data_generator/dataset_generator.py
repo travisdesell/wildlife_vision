@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # basic imports
-import sys, os, random
+import sys, os, random, csv
 
 # allow for the conversion of datatypes
 import struct
@@ -45,6 +45,7 @@ def load_binfile(binfile):
             # read in each observation
             for j in range(msi_observations):
                 observation = struct.unpack('IIIII', fp.read(20))
+                obshash = struct.unpack('IIII', fp.read(16))
 
                 # make sure the species is allows
                 if not observation[0] in species_whitelist:
@@ -55,7 +56,8 @@ def load_binfile(binfile):
                     'x': observation[1],
                     'y': observation[2],
                     'width': observation[3],
-                    'height': observation[4]
+                    'height': observation[4],
+                    'hash': "{}{}{}{}".format(obshash[0], obshash[1], obshash[2], obshash[3])
                 })
 
     return data
@@ -140,11 +142,12 @@ def generate_background(imgdir, background, locations):
             for ob in bg_obs:
                 obs.append(ob)
 
-def generate_idx(filename, species_filename, imgdir, background, bg_locations, locations):
+def generate_idx(filename, species_filename, csv_filename, imgdir, background, bg_locations, locations):
     global obs_size, half_obs_size
 
     total_obs = 0
     bg_obs = 0
+    counts = {}
     for msi_id, obs in locations.iteritems():
         # skip any MSIs not in the universal BG set
         if not msi_id in bg_locations:
@@ -153,6 +156,29 @@ def generate_idx(filename, species_filename, imgdir, background, bg_locations, l
         # increment our total obs
         bg_obs = bg_obs + len(bg_locations[msi_id])
         total_obs = total_obs + len(obs)
+
+        # update our counts
+        observers = []
+        blue_total = 0
+        white_total = 0
+        for ob in obs:
+            if not ob['hash'] in observers:
+                observers.append(ob['hash'])
+            if ob['species_id'] == 2:
+                white_total = white_total + 1
+            elif ob['species_id'] == 1000000:
+                blue_total = blue_total + 1
+
+        if len(observers) > 0:
+            counts[msi_id] = {
+                'white': int(round(white_total / len(observers))),
+                'blue': int(round(blue_total / len(observers)))
+            }
+        else:
+            counts[msi_id] = {
+                'white': 0,
+                'blue': 0
+            }
 
         imgname = '{}.png'.format(msi_id)
         with Image.open(os.path.join(imgdir, imgname)) as img:
@@ -164,7 +190,7 @@ def generate_idx(filename, species_filename, imgdir, background, bg_locations, l
     print '\t\t\tTotal observations :', total_obs
 
     # open our file for writing
-    with open(filename, 'wb') as fp, open(species_filename, 'wb') as species_fp:
+    with open(filename, 'wb') as fp, open(species_filename, 'wb') as species_fp, open(csv_filename, 'wb') as csv_fp:
         # 0x00, 0x02 must be the first 2 bytes
         # 0x08 is for unsigned bytes (chars)
         # 4 is for count, W, H, RGB
@@ -181,6 +207,10 @@ def generate_idx(filename, species_filename, imgdir, background, bg_locations, l
 
         # rgb
         fp.write(struct.pack('>I', 3))
+
+        # prep our csv file
+        csvwriter = csv.writer(csv_fp)
+        csvwriter.writerow(['MSI', 'WHITE', 'BLUE'])
 
         # go through and get all our RGB data
         for msi_id, obs in locations.iteritems():
@@ -214,6 +244,12 @@ def generate_idx(filename, species_filename, imgdir, background, bg_locations, l
                         for ypx in range(y, y + obs_size):
                             (r, g, b) = img.getpixel((xpx, ypx))[:3]
                             fp.write(struct.pack('<BBB', r, g, b))
+
+                # write out the csv
+                if not msi_id in counts:
+                    csvwriter.writerow([msi_id, 0, 0])
+                else:
+                    csvwriter.writerow([msi_id, counts[msi_id]['white'], counts[msi_id]['blue']])
 
 if __name__ == '__main__':
     print ''
@@ -292,6 +328,7 @@ if __name__ == '__main__':
                 for obs in binfile_locations[i][msi_id]:
                     locations[msi_id].append(obs)
                     obscount = obscount + 1
+
     print '\t', len(locations), 'unioned MSIs.'
     print '\t', obscount, 'total observations.'
 
@@ -361,8 +398,10 @@ if __name__ == '__main__':
         basename = basename.split("_")[-1]
         idx = os.path.join(outdir, '{}.idx'.format(basename))
         speciesidx = os.path.join(outdir, 'species_{}.idx'.format(basename))
+        csvfile = os.path.join(outdir, '{}.csv'.format(basename))
         test_idx = os.path.join(outdir, 'test_{}.idx'.format(basename))
         test_speciesidx = os.path.join(outdir, 'test_species_{}.idx'.format(basename))
+        test_csvfile = os.path.join(outdir, 'test_{}.csv'.format(basename))
 
         print '\t', basename
         print '\t\tTraining IDX         :', idx
@@ -371,8 +410,8 @@ if __name__ == '__main__':
         print '\t\tTesting Species IDX  :', test_speciesidx
 
         print '\t\tGenerating training IDXs (this will take a while)...'
-        generate_idx(idx, speciesidx, traindir, background, locations, binfile_locations[i])
+        generate_idx(idx, speciesidx, csvfile, traindir, background, locations, binfile_locations[i])
 
         print '\t\tGenerating testing IDXs (this will take less of a while)...'
-        generate_idx(test_idx, test_speciesidx, testdir, background, test_locations, binfile_locations[i])
+        generate_idx(test_idx, test_speciesidx, test_csvfile, testdir, background, test_locations, binfile_locations[i])
     print 'Done.'
